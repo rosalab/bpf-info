@@ -1,0 +1,11 @@
+site_name: BPF Info
+nav:
+  - Home: index.md
+  - BPF Bytecode: bytecode.md
+  - BPF Program: program.md
+  - BPF Verifier: verifier.md
+  - BPF JIT: jit.md
+  - libbpf: libbpf.md
+  - BPF Maps: map.md
+  - bpftool: bpftool.md
+theme: readthedocs
