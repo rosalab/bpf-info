@@ -5,6 +5,7 @@ The verifier uses two passes.
 ## Two Verifier Passes
 The first pass the verifier checks that the program is a [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph), as well as place some constraints on the length.
 The verifier will reject a BPF program at this point if
+
 1. Larger than `BPF_MAXINSNS`
 2. Has a loop (in the form of a backedge on the [CFG](https://en.wikipedia.org/wiki/Control-flow_graph)
 3. Unreachable instructions exist
