@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Libbpf skeleton - BPF Info</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Libbpf skeleton";
+        var mkdocs_page_input_path = "libbpf_skeleton.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> BPF Info
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../bytecode/">BPF Bytecode</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../program/">BPF Program</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../verifier/">BPF Verifier</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../jit/">BPF JIT</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../libbpf/">libbpf</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../map/">BPF Maps</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../bpftool/">bpftool</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">BPF Info</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Libbpf skeleton</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p>﻿# <a name="_dqi5aby2j1j"></a>Developer Machine Setup using inner_unikernel for eBPF programs</p>
+<h3 id="what-are-traceable-functions"><a name="_wozkdroeokc4"></a>What are traceable functions?</h3>
+<p>In my source code, I used __kmalloc kprobe traceable functions. You can find all the list of functions in /sys/kernel/debug/tracing/available_filter_functions</p>
+<p>As in my above ls you also saw vmlinux.h file. The vmlinux.h file is, I generated using,</p>
+<p>upgautam@ubuntu205:~/CLionProjects/fastpathtestBpf/bpf$ bpftool btf dump file /sys/kernel/btf/vmlinux format c &gt; vmlinux.h</p>
+<h3 id="what-is-vmlinuxh"><a name="_ml0aq6wgxgbs"></a>What is vmlinux.h?</h3>
+<p>vmlinux.h is generated code. it contains all of the type definitions that your running Linux kernel uses in it’s own source code. When you build Linux one of the output artifacts is a file called vmlinux (there is vmlinz also, but vmlinux is uncompressed file while vmlinuz is compressed one). It’s also typically packaged with major distributions. This is an <a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format"><strong>ELF</strong></a> binary that contains the compiled kernel inside it. The vmlinux.h contains every type-definition -- as listed below -- that the installed kernel uses, it’s a very large header file.</p>
+<p>Kernel Data Structures:</p>
+<p>task_struct: Represents a process or task in the kernel.</p>
+<p>file: Represents an open file descriptor.</p>
+<p>inode: Represents an inode in the filesystem.</p>
+<p>super_block: Represents a filesystem superblock.</p>
+<p>net_device: Represents a network interface device.</p>
+<p>Memory Management Structures:</p>
+<p>page: Represents a physical page frame.</p>
+<p>vm_area_struct: Represents a memory mapping area.</p>
+<p>mm_struct: Represents a process's memory map.</p>
+<p>Device and Driver Structures:</p>
+<p>device: Represents a hardware device.</p>
+<p>platform_device: Represents a device on a platform bus.</p>
+<p>pci_dev: Represents a PCI device.</p>
+<p>Networking Structures:</p>
+<p>sk_buff: Represents a network packet buffer.</p>
+<p>net_device: Represents a network interface device.</p>
+<p>sock: Represents a socket.</p>
+<p>Filesystem Structures:</p>
+<p>inode: Represents an inode in the filesystem.</p>
+<p>file_operations: Represents operations on a file.</p>
+<p>address_space: Represents the address space of a file.</p>
+<p>Kernel Constants and Macros:</p>
+<p>Configuration constants controlling various kernel features.</p>
+<p>Macros for handling bit manipulation, memory allocation, and more.</p>
+<p>Constants for error codes, system call numbers, and other kernel interfaces.</p>
+<p>Other Miscellaneous Structures:</p>
+<p>Structures related to timers, interrupts, locks, and synchronization primitives.</p>
+<p>Structures related to virtual memory management, scheduling, and process control.</p>
+<h4 id="what-is-the-usebenefits-of-using-vmlinuxh"><a name="_9jdnk8bhj7pn"></a>What is the use/benefits of using vmlinux.h?</h4>
+<p>Since the vmlinux.h file is generated from your installed kernel, your bpf program could break if you try to run it on another machine without recompiling if it’s running a different kernel version. This is because, from version to version, definitions of internal structs change within the linux source code. So, the best practice is always recompile your bpf program before running it. It means including vmlinux.h, usually demands, recompiling your bpf program. Then why do you want to include this vmlinux.h at all?</p>
+<p>But wait, the CO:RE (Compile Once, Run Everywhere) of libbpf allows you to analyze kernel data structures defined inside vmlinux.h.</p>
+<p>analysis output = core_analyze_function(vmlinux.h)</p>
+<p>Now, for your different kernel version, where you are now running, can automatically adapt based on analysis_output. This brought portability. The system, especially libbpf system, will adapt based on analysis_output.</p>
+<p>There are several other benefits of using vmlinux.h in your bpf program. Please google yourself.</p>
+<h3 id="what-is-elf-binary"><a name="_nxyybsouxnkv"></a>What is ELF binary?</h3>
+<p>An ELF (Executable and Linkable Format) binary is a common file format used for executables, object code, shared libraries, and core dumps in Unix-like operating systems such as Linux, BSD, and others.</p>
+<p>Here's a breakdown of what each component typically contains:</p>
+<ul>
+<li><strong>Executable Code</strong>: This section contains machine code that the CPU can execute directly.</li>
+<li><strong>Data</strong>: This section contains initialized data that the program needs during execution. This can include global variables and static variables that have <strong>explicit initialization.</strong></li>
+<li><strong>Uninitialized Data (BSS)</strong>: This section contains <strong>uninitialized</strong> data that the program needs during execution. It is typically zero-initialized.</li>
+<li><strong>Symbol Table</strong>: This table holds information about various symbols used in the program, including function names, global variable names, and so on.</li>
+<li><strong>Program Header Table</strong>: This table contains information required by the system to map the binary into memory during execution. It includes details like which parts of the binary are executable, which parts are read-only, etc.</li>
+<li><strong>Section Header Table:</strong> This table contains information about various sections within the binary, such as their names, sizes, and file offsets.</li>
+</ul>
+<p>ELF binaries are flexible and versatile, supporting features like position-independent code, shared libraries, and more, making them a fundamental part of Unix-like operating systems' executable and linking infrastructure.</p>
+<h2 id="libbpf-skeleton"><a name="_3k9hqm7hn6jv"></a>libbpf skeleton</h2>
+<p>libbpf is a C-based library containing a BPF loader that takes compiled BPF object files and prepares and loads them into the Linux kernel. libbpf takes the heavy lifting of loading, verifying, and attaching BPF programs to various kernel hooks, allowing BPF application developers to focus only on BPF program correctness and performance.</p>
+<p>The following are the high-level features supported by libbpf:</p>
+<ul>
+<li>Provides high-level and low-level APIs for user space programs to interact with BPF programs. The low-level APIs wrap all the bpf system call functionality, which is useful when users need more fine-grained control over the interactions between user space and BPF programs.</li>
+<li>Provides overall support for the BPF object skeleton generated by bpftool. The skeleton file simplifies the process for the user space programs to access global variables and work with BPF programs.</li>
+<li>Provides BPF-side APIS, including BPF helper definitions, BPF maps support, and tracing helpers, allowing developers to simplify BPF code writing.</li>
+<li>Supports BPF CO-RE mechanism, enabling BPF developers to write portable BPF programs that can be compiled once and run across different kernel versions.</li>
+</ul>
+<p>A BPF application consists of one or more BPF programs (either cooperating or completely independent), BPF maps, and global variables. The global variables are shared between all BPF programs, which allows them to cooperate on a common set of data. libbpf provides APIs that user space programs can use to manipulate the BPF programs by triggering different phases of a BPF application lifecycle.</p>
+<p>The following section provides a brief overview of each phase in the BPF life cycle:</p>
+<ul>
+<li><strong>Open phase</strong>: In this phase, libbpf parses the BPF object file and discovers BPF maps, BPF programs, and global variables. After a BPF app is opened, user space apps can make additional adjustments (setting BPF program types, if necessary; pre-setting initial values for global variables, etc.) before all the entities are created and loaded.</li>
+<li><strong>Load phase</strong>: In the load phase, libbpf creates BPF maps, resolves various relocations, and verifies and loads BPF programs into the kernel. At this point, libbpf validates all the parts of a BPF application and loads the BPF program into the kernel, but no BPF program has yet been executed. After the load phase, it’s possible to set up the initial BPF map state without racing with the BPF program code execution.</li>
+<li><strong>Attachment phase</strong>: In this phase, libbpf attaches BPF programs to various BPF hook points (e.g., tracepoints, kprobes, cgroup hooks, network packet processing pipeline, etc.). During this phase, BPF programs perform useful work such as processing packets, or updating BPF maps and global variables that can be read from user space.</li>
+<li><strong>Tear down phase</strong>: In the tear down phase, libbpf detaches BPF programs and unloads them from the kernel. BPF maps are destroyed, and all the resources used by the BPF app are freed.</li>
+</ul>
+<p>BPF skeleton is an alternative interface to libbpf APIs for working with BPF objects. Skeleton code abstract away generic libbpf APIs to significantly simplify code for manipulating BPF programs from user space. Skeleton code includes a bytecode representation of the BPF object file, simplifying the process of distributing your BPF code. With BPF bytecode embedded, there are no extra files to deploy along with your application binary.</p>
+<p>You can generate the skeleton header file (.skel.h) for a specific object file by passing the BPF object to the bpftool. The generated BPF skeleton provides the following custom functions that correspond to the BPF lifecycle, each of them prefixed with the specific object name:</p>
+<ul>
+<li><name>__open() – creates and opens BPF application (<name> stands for the specific bpf object name)</li>
+<li><name>__load() – instantiates, loads,and verifies BPF application parts</li>
+<li><name>__attach() – attaches all auto-attachable BPF programs (it’s optional, you can have more control by using libbpf APIs directly)</li>
+<li><name>__destroy() – detaches all BPF programs and frees up all used resources</li>
+</ul>
+<p>Using the skeleton code is the recommended way to work with bpf programs. Keep in mind, BPF skeleton provides access to the underlying BPF object, so whatever was possible to do with generic libbpf APIs is still possible even when the BPF skeleton is used. It's an additive convenience feature, with no syscalls, and no cumbersome code.</p>
+<p>Several other advantages of skeleton</p>
+<ul>
+<li>BPF skeleton provides an interface for user space programs to work with BPF global variables. The skeleton code memory maps global variables as a struct into user space. The struct interface allows user space programs to initialize BPF programs before the BPF load phase and fetch and update data from user space afterward.</li>
+<li>The skel.h file reflects the object file structure by listing out the available maps, programs, etc. BPF skeleton provides direct access to all the BPF maps and BPF programs as struct fields. This eliminates the need for string-based lookups with bpf_object_find_map_by_name() and bpf_object_find_program_by_name() APIs, reducing errors due to BPF source code and user-space code getting out of sync.</li>
+<li>The embedded bytecode representation of the object file ensures that the skeleton and the BPF object file are always in sync.</li>
+</ul>
+<h2 id="step-by-step-compile-build-run-your-ebpf-program"><a name="_8qitevxmanxj"></a>Step by Step compile, build, run your eBPF program</h2>
+<p><strong>upgautam@ubuntu205:~/CLionProjects/fastpathtestBpf/bpf$</strong> bpftool btf dump file /sys/kernel/btf/vmlinux format c &gt; vmlinux.h</p>
+<p>Now, we include vmlinux.h in ThousandLoopBpf.c, and compile ThousandLoopBpf.c to generate ThousandLoopBpf.o</p>
+<p><strong>upgautam@ubuntu205:~/CLionProjects/fastpathtestBpf/bpf$</strong> clang -g -I<code>realpath ~/CLionProjects/decoupling/linux/tools/lib</code> -I<code>realpath ~/CLionProjects/decoupling/linux/usr/include</code> -target bpf -Wall -O2 -c ThousandLoopBpf.c -o ThousandLoopBpf.o</p>
+<p>Then we utilize the genrated ThousandLoopBpf.o in our next command to generate skeleton header file (i.e., ThousandLoopBpf.skel.h) inside output directory.</p>
+<p><strong>upgautam@ubuntu205:~/CLionProjects/fastpathtestBpf/bpf$</strong> bpftool gen skeleton ThousandLoopBpf.o name ThousandLoopBpf | tee ./output/ThousandLoopBpf.skel.h &gt; /dev/null 2&gt;&amp;1</p>
+<p>//Then, we include ThousandLoopBpf.skel.h in our corresponding ThousandLoopBpf.skel.c file. ThousandLoopBpf.skel.c is like our normal user-space C program, that we compile to finally output ThousandLoopBpf binary.</p>
+<p><strong>upgautam@ubuntu205:~/CLionProjects/fastpathtestBpf/bpf$</strong> clang -g -I<code>realpath ~/CLionProjects/decoupling/linux/tools/lib</code> -I<code>realpath ~/CLionProjects/decoupling/linux/usr/include</code> -L<code>realpath ~/CLionProjects/decoupling/linux/tools/lib/bpf</code> -lbpf ThousandLoopBpf.skel.c -o ThousandLoopBpf</p>
+<p>Finally, we run ThousandLoopBpf from inside docker container as explained below.</p>
+<p>I have volume mounted the whole CLionProjects directory inside my docker (can be https://github.com/rosalab/inner_unikernels or https://github.com/rosalab/decoupling) container, where I have configured everything that I need to run a bpf program. To be exact, I cloned https://github.com/rosalab/decoupling and switched to milo-reloc branch, and created my separate branch off of that milo-reloc branch.</p>
+<p>sudo make qemu-run</p>
+<p>then I am inside docker container where I am installed latest linux kernel and all needed libraries for my BPF development. And I run my</p>
+<p>root@q:/CLionProjects/fastpathtestBpf/bpf# ./ThousandLoopBpf</p>
+<p>Now, create corresponding loader implementation file for ThousandLoopBpf.skel.h, named that to ThousandLoopBpf.skel.c, which should be as below. How did I know this code? I just copy and pasted from some official site and then all I needed to change is name of the struct that I highlight in Yellow below. I am using Clion IDE, which does auto-completion, so much easy to complete this source code.</p>
+<h3 id="source-code"><a name="_1k97u1fu4v97"></a>Source Code</h3>
+<h4 id="thousandloopc"><a name="_jl0riix6va0h"></a>ThousandLoop.c</h4>
+<h1 id="include">include <stdio.h></h1>
+<h1 id="include_1">include <unistd.h></h1>
+<h1 id="include_2">include <time.h></h1>
+<p>int main() {</p>
+<p><code></code>struct timespec start, end;</p>
+<p><code></code>long long delta_ns;</p>
+<p><code></code>clock_gettime(CLOCK_MONOTONIC, &amp;start);</p>
+<p><code></code>int i;</p>
+<p><code></code>for (i=0; i&lt;10000; i++) {</p>
+<p><code></code>getpid(); <em>//vDSO optimization gives false positive</em>
+*
+<code></code>printf(""); <em>//leads to system call</em>
+*
+<code></code>}</p>
+<p><code></code>clock_gettime(CLOCK_MONOTONIC, &amp;end);</p>
+<p><code></code>delta_ns = (end.tv_sec - start.tv_sec) * 1000000000LL + (end.tv_nsec - start.tv_nsec);</p>
+<p><code></code>printf("Elapsed time: %lld nanoseconds\n", delta_ns);</p>
+<p><code></code>return 0;</p>
+<p>}</p>
+<p>The equivalent BPF program for ThousandLoop.c is ThousandLoopBpf.c</p>
+<h4 id="thousandloopbpfc"><a name="_hwqfl9tszkc4"></a>ThousandLoopBpf.c</h4>
+<h1 id="include-vmlinuxh">include "vmlinux.h"</h1>
+<h1 id="include_3">include <bpf/bpf\_helpers.h></h1>
+<p>char LICENSE[] SEC("license") = "GPL";</p>
+<p><em>//this gets triggered something like clear command from terminal</em></p>
+<p>SEC("kprobe/do_exit")</p>
+<p>int bpf_prog(struct pt_regs *ctx) {</p>
+<p><code></code><em>//start time</em>
+*
+<code></code>__u64 start = bpf_ktime_get_ns();</p>
+<p><code></code>int i;</p>
+<p><code></code>for (i = 0; i &lt; 1000; i++) {</p>
+<p><code></code>bpf_printk("");</p>
+<p><code></code>}</p>
+<p><code></code><em>//end time</em>
+*
+<code></code>__u64 end = bpf_ktime_get_ns();</p>
+<p><code></code>__u64 delta_ns = end - start;</p>
+<p><code></code>bpf_printk("Elapsed time: %lld nanoseconds\n", delta_ns);</p>
+<p><code></code>return 0;</p>
+<p>}</p>
+<p>Comile ThousandLoopBpf.c to ThousandLoopBpf.o as,</p>
+<p><strong>upgautam@ubuntu205:~/CLionProjects/fastpathtestBpf/bpf$</strong> bpftool btf dump file /sys/kernel/btf/vmlinux format c &gt; vmlinux.h</p>
+<p>Now, we include vmlinux.h in ThousandLoopBpf.c, and compile ThousandLoopBpf.c to generate ThousandLoopBpf.o</p>
+<p><strong>upgautam@ubuntu205:~/CLionProjects/fastpathtestBpf/bpf$</strong> clang -g -I<code>realpath ~/CLionProjects/decoupling/linux/tools/lib</code> -I<code>realpath ~/CLionProjects/decoupling/linux/usr/include</code> -target bpf -Wall -O2 -c ThousandLoopBpf.c -o ThousandLoopBpf.o</p>
+<p>Also, generate skeleton header file</p>
+<p><strong>upgautam@ubuntu205:~/CLionProjects/fastpathtestBpf/bpf$</strong> bpftool gen skeleton ThousandLoopBpf.o name ThousandLoopBpf | tee ./output/ThousandLoopBpf.skel.h &gt; /dev/null 2&gt;&amp;1</p>
+<p>Then we write ThousandLoopBpf.skel.c as</p>
+<h1 id="include_4">include <stdio.h></h1>
+<h1 id="include_5">include <unistd.h></h1>
+<h1 id="include_6">include <signal.h></h1>
+<h1 id="include_7">include <string.h></h1>
+<h1 id="include_8">include <errno.h></h1>
+<h1 id="include_9">include <bpf/libbpf.h></h1>
+<h1 id="include-outputthousandloopbpfskelh">include "output/ThousandLoopBpf.skel.h"</h1>
+<p>static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va_list args)</p>
+<p>{</p>
+<p><code></code>return vfprintf(stderr, format, args);</p>
+<p>}</p>
+<p>static volatile sig_atomic_t stop;</p>
+<p>static void sig_int(int signo)</p>
+<p>{</p>
+<p><code></code>stop = 1;</p>
+<p>}</p>
+<p>int main(int argc, char **argv)</p>
+<p>{</p>
+<p><code></code>struct ThousandLoopBpf *skel;</p>
+<p><code></code>int err;</p>
+<p><code></code><em>/* Set up libbpf errors and debug info callback */</em>
+*
+<code></code>libbpf_set_print(libbpf_print_fn);</p>
+<p><code></code><em>/* Open load and verify BPF application */</em>
+*
+<code></code>skel = ThousandLoopBpf__open_and_load();</p>
+<p><code></code>if (!skel) {</p>
+<p><code></code>fprintf(stderr, "Failed to open BPF skeleton\n");</p>
+<p><code></code>return 1;</p>
+<p><code></code>}</p>
+<p><code></code><em>/* Attach tracepoint handler */</em>
+*
+<code></code>err = ThousandLoopBpf__attach(skel);</p>
+<p><code></code>if (err) {</p>
+<p><code></code>fprintf(stderr, "Failed to attach BPF skeleton\n");</p>
+<p><code></code>goto cleanup;</p>
+<p><code></code>}</p>
+<p><code></code>if (signal(SIGINT, sig_int) == SIG_ERR) {</p>
+<p><code></code>fprintf(stderr, "can't set signal handler: %s\n", strerror(errno));</p>
+<p><code></code>goto cleanup;</p>
+<p><code></code>}</p>
+<p><code></code>printf("Successfully started! Please run <code>sudo cat /sys/kernel/debug/tracing/trace\_pipe</code> "</p>
+<p><code></code>"to see output of the BPF programs.\n");</p>
+<p><code></code>while (!stop) {</p>
+<p><code></code>fprintf(stderr, ".");</p>
+<p><code></code>sleep(1);</p>
+<p><code></code>}</p>
+<p><code></code>cleanup:</p>
+<p><code></code>ThousandLoopBpf__destroy(skel);</p>
+<p><code></code>return -err;</p>
+<p>}</p>
+<p><strong>Note</strong>: Just copy paste and change the yellowish part for your program.</p>
+<p>Finally, compile ThousandLoopBpf.skel.c to output ThousandLoopBpf</p>
+<p><strong>upgautam@ubuntu205:~/CLionProjects/fastpathtestBpf/bpf$</strong> clang -g -I<code>realpath ~/CLionProjects/decoupling/linux/tools/lib</code> -I<code>realpath ~/CLionProjects/decoupling/linux/usr/include</code> -L<code>realpath ~/CLionProjects/decoupling/linux/tools/lib/bpf</code> -lbpf ThousandLoopBpf.skel.c -o ThousandLoopBpf</p>
+<p>That ThousandLoopBpf we then run inside docker container.</p>
+<p>And can do from host machine.</p>
+<p>upgautam@ubuntu205:~/CLionProjects/fastpathtestBpf/bpf$ sudo cat /sys/kernel/debug/tracing/trace_pipe</p>
+<p>[sudo] password for upgautam:</p>
+<p><code></code>&lt;...&gt;-874059  [008] ..... 2531317.041360: sys_execve(filename: 7f301808fdc0, argv: 7f3068bfd180, envp: 7f310c004e20)</p>
+<p><code></code>&lt;...&gt;-874059  [008] ...21 2531317.041365: bpf_trace_printk: Elapsed time: 1398 nanoseconds</p>
+<p><code></code>&lt;...&gt;-874059  [008] ..... 2531317.042141: sys_execve(filename: 561fce0192a0, argv: 561fce0193a0, envp: 7ffe57445708)</p>
+<p><code></code>&lt;...&gt;-874059  [008] ...21 2531317.042144: bpf_trace_printk: Elapsed time: 1348 nanoseconds</p>
+<p><code></code>ps-874066  [010] ..... 2531319.744947: sys_execve(filename: 7f3018092410, argv: 7f2f22bfc180, envp: 7f310c004e20)</p>
+<p><code></code>ps-874066  [010] ...21 2531319.744952: bpf_trace_printk: Elapsed time: 1396 nanoseconds</p>
+<p><code></code>ps-874066  [010] ..... 2531319.745751: sys_execve(filename: 55a57dbe62a0, argv: 55a57dbe63a0, envp: 7ffe94eed178)</p>
+<p><code></code>ps-874066  [010] ...21 2531319.745755: bpf_trace_printk: Elapsed time: 1349 nanoseconds</p>
+<p><code></code>runc-874070  [011] ..... 2531320.394696: sys_execve(filename: c0001533d0, argv: c000066d80, envp: c000186320)</p>
+<p><code></code>runc-874070  [011] ...21 2531320.394700: bpf_trace_printk: Elapsed time: 1408 nanoseconds</p>
+<p><code></code>&lt;...&gt;-874076  [010] ..... 2531320.399943: sys_execve(filename: c0003bc390, argv: c0001e2bd0, envp: c0003d10e0)</p>
+<p><code></code>&lt;...&gt;-874076  [010] ...21 2531320.399947: bpf_trace_printk: Elapsed time: 1353 nanoseconds</p>
+<p>to see trace_output</p>
+<p>Command like "clear" in terminal will trigger do_exit syscall.</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
