@@ -8,4 +8,5 @@ nav:
   - libbpf: libbpf.md
   - BPF Maps: map.md
   - bpftool: bpftool.md
+  - BPF Compile-Build-Run: bpf_compile_build_run.md
 theme: readthedocs

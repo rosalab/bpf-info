@@ -42,6 +42,8 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href=".">Home</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#adding-to-this-site">Adding to this site</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#mkdocs-command-reference">MkDocs Command Reference</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#project-layout">Project layout</a>
@@ -102,6 +104,17 @@
               
                 <h1 id="bpf-info">BPF Info</h1>
 <p>A static site serving as our internal documentation for BPF and ROSA projects.</p>
+<h2 id="adding-to-this-site">Adding to this site</h2>
+<p>There are two ways to add content to the site: you can either modify existing pages, or create new pages.
+To modify an exisitng page, simply add your text to the corresponding markdown file.</p>
+<p>Creating a new page is slightly more complicated.
+First create your markdown file in the <code>docs</code> directory.
+Then, if you want your page to be accessible from the global nav bar on the left, add an entry in <code>mkdocs.yml</code> that looks like:</p>
+<pre><code>nav:
+...     # These are the other entires
+ - Page Name: pagefile.md
+...
+</code></pre>
 <h2 id="mkdocs-command-reference">MkDocs Command Reference</h2>
 <ul>
 <li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
@@ -163,5 +176,5 @@ docs/
 
 <!--
 MkDocs version : 1.5.3
-Build Date UTC : 2024-01-12 17:10:33.038430+00:00
+Build Date UTC : 2024-03-16 00:35:34.756451+00:00
 -->
