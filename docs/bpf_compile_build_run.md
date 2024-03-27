@@ -575,4 +575,6 @@ https://docs.kernel.org/bpf/libbpf/libbpf_overview.html
 ## Host, Docker, QEMU
 In our setup, Docker is providing root file system to QEMU, and docker also providing all build related things to QEMU. QEMU has new kernel and all build libraries to run bpf program.
 
-I will write separate blog for how we setup whole inner_unikernel project, where we have this host, docker, qemu concept. 
+Read the README file here to know how we setup our docker and qemu to wrap all the bpf libraries and run bpf program inside it. 
+
+https://github.com/upgautamvt/inner_unikernels/blob/main/README.org
