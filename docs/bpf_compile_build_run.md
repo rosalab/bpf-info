@@ -551,7 +551,7 @@ HundredLoopBpf.skel.h  HundredThousandLoopBpf.skel.h  TenBillionLoopBpf.skel.h  
 sudo systemctl restart docker
 `
 
-
+# Other ways to load BPF program
 There are other ways to load BPF bytecode into the system other than using that generated skeleton header file. 
 
 We can write manual loader C program, or using bpftool with autoattach. There are several other python or Go based loaders, or BCC loaders. I only discuss here bpftool autoattach and writing manual C loader program.
@@ -565,12 +565,117 @@ But it worked only for "SEC("tracepoint/syscalls/sys_enter_execve")", and did no
 "
 
 ## Manual C program to load Bpf program
-TODO: 
+Let's find BPF program and their corresponding loader programs written by Linux kernel developers from here: https://elixir.bootlin.com/linux/v6.8.2/source/samples/bpf
+
+Let's just take any two files: cpustat_kern.c and another tracex1.bpf.c. For tracex1.bpf.c, I renamed it to tracex1.bpf.c because my Makefile uses some sort of regex that treates .bpf.c files differently, so I had to rename it. Their corresponding files are cpustat_user.c and tracex1_user.c in the kernel. Also, we need vmlinux.h (see instruction above to generate how), and we need net_shared.h file as well. So, we need total 5 files from officla Linux kernel repo. 
+
+So, let's create a manual_load directory, and put all the files in there. 
+
+`
+upgautam@ubuntu205:~/CLionProjects/fastpathtest/bpf/manual_load$ ls
+cpustat_kern.c  finalMakefile  Makefile  manual_loader  net_shared.h  output  template.c  TenLoopBpf.c  tracex1.c  vmlinux.h
+`
+
+
+I put TenLoopBpf.c just to make sure if my Makefile works or not. We also need to create output directory inside manual_loader because Makefile needs that. I created another directory manual_loader, where I put manually written loader files cpustat_user.c and tracex1_user.c. When we generate, using skeleton, the correspdong .skel.c files for tracex1.c and cputstat_kern.c, we can then compare those generated with those files in manual_loader directory. 
+
+### Makefile
+`
+CC = clang
+CFLAGS = -g -target bpf -Wall -O2 -D__TARGET_ARCH_x86
+INCLUDES = -I$(shell realpath ~/CLionProjects/decoupling/linux/tools/lib) -I$(shell realpath ~/CLionProjects/decoupling/linux/usr/include) -I$(shell realpath ~/CLionProjects/decoupling/linux/tools/include)
+
+# Define source files
+SRCS := $(filter-out template.c,$(wildcard *.c))
+OBJS = $(SRCS:.c=.o)
+
+# Define targets, first run $(OBJS) and then generate-and-make
+all: $(OBJS) generate-and-make
+
+# Rule to compile any .c file into a .o file and generate skeleton file
+%.o: %.c
+	@echo "Compiling $<"
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	@echo "Generating skeleton file for $@"
+	bpftool gen skeleton $@ name $(basename $@) | tee ./output/$(basename $@).skel.h > /dev/null 2>&1
+	@echo "Generating skel.c file for $@"
+	cat template.c | sed 's/%s/$(basename $@)/g' > ./output/$(basename $@).skel.c
+
+# Target to generate Makefile in the output directory and run make
+# it first run generate-makefile because it is prerequisite and then go to generate-and-make
+generate-and-make: generate-makefile
+	@echo "Running make in output directory"
+	@$(MAKE) -C output -f Makefile
+
+# Target to generate Makefile in the output directory
+generate-makefile:
+	@echo "Generating Makefile in output directory"
+	cp finalMakefile output/Makefile
+
+# Define a rule to clean up generated files
+clean:
+	rm -f $(OBJS)
+	rm -rf ./output/*
+	rm -f *.skel.c
+
+
+.PHONY: all clean generate-makefile generate-and-make
+`
+
+This time to make Makefile inside output directory, I copy it from finalMakefile. This is why I have finalMakefile. 
+
+### finalMakefile
+`
+## Define directories
+LIB_DIR := $(shell realpath ~/CLionProjects/decoupling/linux/tools/lib)
+INCLUDE_DIR := $(shell realpath ~/CLionProjects/decoupling/linux/usr/include)
+BPF_LIB_DIR := $(shell realpath ~/CLionProjects/decoupling/linux/tools/lib/bpf)
+
+## Define source files
+SKEL_SRCS := $(wildcard *.skel.c)
+SKEL_BINS := $(SKEL_SRCS:.skel.c=Final)
+
+## Compiler options
+CC := clang
+CFLAGS := -g
+LIBS := -lbpf
+
+## Targets
+all: $(SKEL_BINS)
+
+## Rule to compile any .skel.c file into a binary
+%Final: %.skel.c
+	$(CC) $(CFLAGS) -I"$INCLUDE_DIR" -I"$LIB_DIR" -L"$BPF_LIB_DIR" $< $(LIBS) -o $@
+
+## Target to run all generated binaries
+run: $(SKEL_BINS)
+	@for bin in $(SKEL_BINS); do \
+		./$bin; \
+	done
+
+## Clean up generated files
+clean:
+	rm -f $(SKEL_BINS)
+
+`
+
 
 ## Few useful references
 https://github.com/iovisor/bcc/blob/master/docs/reference_guide.md
 https://liuhangbin.netlify.app/post/bpf-skeleton/
 https://docs.kernel.org/bpf/libbpf/libbpf_overview.html
+
+I then run "make"
+`
+upgautam@ubuntu205:~/CLionProjects/fastpathtest/bpf/manual_load$ ls
+cpustat_kern.c  cpustat_kern.o  finalMakefile  Makefile  manual_loader  net_shared.h  output  template.c  TenLoopBpf.c  TenLoopBpf.o  tracex1.c  tracex1.o  vmlinux.h
+upgautam@ubuntu205:~/CLionProjects/fastpathtest/bpf/manual_load$ ls manual_loader/
+cpustat_user.c  tracex1_user.c
+upgautam@ubuntu205:~/CLionProjects/fastpathtest/bpf/manual_load$ ls output/
+cpustat_kernFinal  cpustat_kern.skel.c  cpustat_kern.skel.h  Makefile  TenLoopBpfFinal  TenLoopBpf.skel.c  TenLoopBpf.skel.h  tracex1Final  tracex1.skel.c  tracex1.skel.h
+`
+
+Now, we have both generated vs. manually written loader files. 
 
 ## Host, Docker, QEMU
 In our setup, Docker is providing root file system to QEMU, and docker also providing all build related things to QEMU. QEMU has new kernel and all build libraries to run bpf program.
